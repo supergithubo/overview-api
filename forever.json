@@ -1,0 +1,11 @@
+{
+    "uid": "overview-api",
+    "append": true,
+    "watch": true,
+    "watchDirectory": "/var/www/html/overview-api",
+    "script": "app.js",
+    "sourceDir": "/var/www/html/overview-api",
+    "logFile": "/var/www/html/overview-api/.forever/forever.log",      
+    "outFile": "/var/www/html/overview-api/.forever/out.log",
+    "errFile": "/var/www/html/overview-api/.forever/err.log"
+}
