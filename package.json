@@ -4,7 +4,7 @@
   "description": "Personal Project Manager API",
   "main": "app.js",
   "scripts": {
-    "test": "nyc --reporter=html --reporter=text mocha --timeout 15000"
+    "test": "nyc --reporter=html --reporter=text mocha --recursive --timeout 15000"
   },
   "author": "Winston Delos Santos <winston.los.santos@treebranch.co>",
   "license": "ISC",
@@ -12,13 +12,22 @@
     "body-parser": "^1.18.1",
     "enum": "^2.4.0",
     "express": "^4.15.4",
+    "express-auth": "file:///var/www/html/express-auth",
     "express-validation": "^1.0.2",
     "joi": "^11.0.1",
     "mongoose": "^4.11.11",
     "mongoose-unique-validator": "^1.0.6",
-    "request": "^2.81.0"
+    "request": "^2.81.0",
+    "underscore": "^1.8.3"
   },
   "devDependencies": {
-    "express-auth-api": "file:///var/www/html/express-auth"
+    "mocha": "^3.5.3",
+    "mocha-mongoose": "^1.2.0",
+    "nyc": "^11.2.1",
+    "proxyquire": "^1.8.0",
+    "randexp": "^0.4.6",
+    "should": "^13.0.1",
+    "sinon": "^3.3.0",
+    "supertest": "^3.0.0"
   }
 }
