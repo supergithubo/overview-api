@@ -4,7 +4,8 @@
   "description": "Personal Project Manager API",
   "main": "app.js",
   "scripts": {
-    "test": "nyc --reporter=html --reporter=text mocha --recursive --timeout 15000"
+    "test": "mocha --recursive --timeout 15000",
+    "coverage": "nyc --reporter=html --reporter=text mocha --recursive --timeout 15000"
   },
   "author": "Winston Delos Santos <winston.los.santos@treebranch.co>",
   "license": "ISC",
