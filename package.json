@@ -5,7 +5,10 @@
   "main": "app.js",
   "scripts": {
     "test": "mocha --recursive --timeout 15000",
-    "coverage": "nyc --reporter=html --reporter=text mocha --recursive --timeout 15000"
+    "coverage": "nyc --reporter=html --reporter=text mocha --recursive --timeout 15000",
+    "coverage-text": "nyc --reporter=text mocha --recursive --timeout 15000",
+    "coverage-html": "nyc --reporter=html mocha --recursive --timeout 15000",
+    "coverage-lcov": "nyc --reporter=lcov mocha --recursive --timeout 15000 > coverage.lcov && codecov --token=b25936d8-434c-449b-8333-846ddc519018"
   },
   "author": "Winston Delos Santos <winston.los.santos@treebranch.co>",
   "license": "ISC",
