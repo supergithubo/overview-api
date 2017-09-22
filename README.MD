@@ -107,3 +107,4 @@ npm run coverage
 #### NOTE
 
 > Express Auth (Auth Dependency) is still in private development stage. Contributions are recommended after its release.
+
