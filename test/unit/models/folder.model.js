@@ -1,4 +1,4 @@
-var dir = '../../';
+var dir = "../../";
 
 var should = require('should');
 var proxyquire = require('proxyquire');

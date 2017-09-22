@@ -1,4 +1,4 @@
-var _ = require('underscore');
+var _ = require("underscore");
 
 exports.build = function(doc, SchemaTarget, data, safe = '') {
     var safeFields = safe.split(',');

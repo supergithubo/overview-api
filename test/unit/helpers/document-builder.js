@@ -1,4 +1,4 @@
-var dir = '../../';
+var dir = "../../";
 
 var should = require('should');
 var randexp = require('randexp');
