@@ -13,7 +13,7 @@ var validation = require('express-validation');
 var app = express();
 var config = require('./config');
 
-var expressAuth = require('express-auth-api')(config);
+var expressAuth = require('express-auth')(config);
 
 validation.options({
     status: 422,
@@ -21,6 +21,7 @@ validation.options({
 });
 
 app.use(compression());
+app.use(bearerToken());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true
@@ -29,20 +30,20 @@ app.use(bodyParser.urlencoded({
 // Routes
 // =============================================================================
 
-app.use(bearerToken());
+var folderRouter = require('./routes/folder.route')(config);
+
 app.use('/v1', [
-    expressAuth.adminRouter,
-    expressAuth.authRouter,
-    expressAuth.selfRouter
+    folderRouter,
+    expressAuth.adminRouter, expressAuth.authRouter, expressAuth.selfRouter
 ]);
 
 app.use(function(err, req, res, next) {
     //console.log(err);
     if(err.name == 'ValidationError' || err.message == 'validation error') {
-        return res.status(422).send(err);
+        return res.status(422).json(err);
     }
     
-    return res.status(500).send(err);
+    return res.status(500).json(err);
 });
 
 // Server Start

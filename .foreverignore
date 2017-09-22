@@ -1,1 +1,4 @@
-.forever/
+node_modules
+coverage
+.forever
+.nyc_output
