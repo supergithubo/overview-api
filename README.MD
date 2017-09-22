@@ -5,7 +5,7 @@ Personal Project Management API
 
 REST API for a Project Management App (Angular 4) I am planning to develop tailored for my freelancing gigs. Inspired by Trello, Asana, Dapulse & Wrike.
 
-[![Codeship](https://img.shields.io/codeship/62fba6a0-81b2-0135-4477-4ec5e3c9a2b0/dev.svg)]()
+[![Codeship](https://img.shields.io/codeship/ab748e30-81b5-0135-4477-4ec5e3c9a2b0/dev.svg)]()
 [![Codacy branch grade](https://img.shields.io/codacy/grade/24746844097445aa806f4bb9c2364f87/dev.svg)]()
 
 ## REQUIREMENTS
