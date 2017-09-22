@@ -5,8 +5,7 @@ Personal Project Management API
 
 REST API for a Project Management App (Angular 4) I am planning to develop tailored for my freelancing gigs. Inspired by Trello, Asana, Dapulse & Wrike.
 
-[![Codeship](https://img.shields.io/codeship/031e1990-2a8c-0135-24b2-028526252516/dev.svg)]()
-[![Codacy branch grade](https://img.shields.io/codacy/grade/32d37310c5ec4cadbda1a34f935da57a/dev.svg)]()
+[![Codeship](https://img.shields.io/codeship/a25a6f30-813b-0135-b235-1235e5a37f40/dev.svg)]()
 
 ## REQUIREMENTS
 
@@ -28,7 +27,7 @@ npm install
 
 ## API
 
-### Auth (using express-auth module)
+### Auth (using express-auth dep)
 - [x] POST /auth/register
 - [x] POST /auth/login
 - [x] POST /auth/password/change
@@ -101,5 +100,12 @@ Code coverage:
 ```
 npm run coverage
 ```
+
+## CONTRIBUTING
+
+#### NOTE
+
+> Express Auth (Auth Dependency) is still in private development stage. Contributions are recommended after its release.
+
 
 ============================
