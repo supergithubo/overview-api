@@ -1,4 +1,4 @@
-// models/folder.js
+// models/folder.model.js
 
 var mongoose = require('mongoose');
 
