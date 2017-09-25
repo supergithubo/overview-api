@@ -78,6 +78,44 @@ describe('unit/helpers/document-builder', function() {
             body.description.should.not.be.equal(folder.description);
             done();
         });
+        it('should update existing schema from req body of empty property', function(done) {
+            var body = {
+                _id: new randexp(/^[0-9a-f]{24}$/).gen(),
+                account: new randexp(/^[0-9a-f]{24}$/).gen(),
+                description: 'description update 2',
+                name: '',
+                is_root: false,
+                updated_at: new Date(),
+                created_at: new Date()
+            };
+            builder.build(folder, Folder, body, 'is_root,description');
+            
+            compareAttr(folder, body, 'is_root,description');
+            body._id.should.not.be.equal(folder._id);
+            body.is_root.should.not.be.equal(folder.is_root);
+            body.description.should.not.be.equal(folder.description);
+            body.name.should.be.equal(folder.name);
+            done();
+        });
+        it('should not update existing schema from req body of undefined property', function(done) {
+            var body = {
+                _id: new randexp(/^[0-9a-f]{24}$/).gen(),
+                account: new randexp(/^[0-9a-f]{24}$/).gen(),
+                description: 'description update 2',
+                name: undefined,
+                is_root: false,
+                updated_at: new Date(),
+                created_at: new Date()
+            };
+            builder.build(folder, Folder, body, 'is_root,description');
+            
+            compareAttr(folder, body, 'is_root,description');
+            body._id.should.not.be.equal(folder._id);
+            body.is_root.should.not.be.equal(folder.is_root);
+            body.description.should.not.be.equal(folder.description);
+            should.exist(folder.name);
+            done();
+        });
     });
     
     describe('update nested', function() {
