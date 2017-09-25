@@ -21,7 +21,7 @@ describe('unit/models/folder.model', function() {
     });
     
     describe('model save', function() {
-        it('should satisfy folder with name & description', function(done) {
+        it('should satisfy folder with account, name & description', function(done) {
             var folder = new Folder();
             folder.account = new randexp(/^[0-9a-f]{24}$/).gen(),
             folder.name = 'folder name';

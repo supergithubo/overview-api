@@ -23,8 +23,16 @@ describe('unit/routes/folder.route', function() {
     
     var request;
     var folderServiceStub;
+    var folder;
     
     before(function(done) {
+        folder = {
+            _id: new randexp(/^[0-9a-f]{24}$/).gen(),
+            parent: new randexp(/^[0-9a-f]{24}$/).gen(),
+            name: "folder name",
+            description: "folder description"
+        };
+        
         folderServiceStub = {};
         var expressAuthStub = {
             authMiddleware: {
@@ -103,13 +111,9 @@ describe('unit/routes/folder.route', function() {
             folderServiceStub.saveFolder = function(user, folder, done) {
                 return done({ message: 'Mongoose error' });
             };
-            var data = {
-                parent: new randexp(/^[0-9a-f]{24}$/).gen(),
-                name: "folder name",
-                description: "folder description"
-            };
+            
             request.post('/v1/folders')
-                .send(data)
+                .send(folder)
                 .end(function(err, res) {
                     if (err) throw err;
                     res.status.should.be.equal(500);
@@ -117,11 +121,16 @@ describe('unit/routes/folder.route', function() {
                 });
         });
         it('should return 422', function(done) {
-            var data = {
-                parent: 'invalid id'
+            var body = {
+                parent: 'invalid ' + folder._id
             };
+
+            folderServiceStub.saveFolder = function(user, folder, done) {
+                throw new Error("Should have not been called");
+            };
+            
             request.post('/v1/folders')
-                .send(data)
+                .send(body)
                 .end(function(err, res) {
                     if (err) throw err;
                     res.status.should.be.equal(422);
@@ -138,13 +147,9 @@ describe('unit/routes/folder.route', function() {
             folderServiceStub.saveFolder = function(user, folder, done) {
                 return done(null, {});
             };
-            var data = {
-                parent: new randexp(/^[0-9a-f]{24}$/).gen(),
-                name: "folder name",
-                description: "folder description"
-            };
+            
             request.post('/v1/folders')
-                .send(data)
+                .send(folder)
                 .end(function(err, res) {
                     if (err) throw err;
                     res.status.should.be.equal(201);
@@ -159,10 +164,22 @@ describe('unit/routes/folder.route', function() {
                 return done({ message: 'Mongoose error' });
             };
             
-            request.get('/v1/folders/id')
+            request.get('/v1/folders/' + folder._id)
                 .end(function(err, res) {
                     if (err) throw err;
                     res.status.should.be.equal(500);
+                    done();
+                });
+        });
+        it('should return 404', function(done) {
+            folderServiceStub.getFolder = function(user, id, done) {
+                return done(null, false);
+            };
+            
+            request.get('/v1/folders/' + folder._id)
+                .end(function(err, res) {
+                    if (err) throw err;
+                    res.status.should.be.equal(404);
                     done();
                 });
         });
@@ -171,7 +188,7 @@ describe('unit/routes/folder.route', function() {
                 return done(null, {});
             };
             
-            request.get('/v1/folders/id')
+            request.get('/v1/folders/' + folder._id)
                 .end(function(err, res) {
                     if (err) throw err;
                     res.status.should.be.equal(200);
@@ -185,19 +202,35 @@ describe('unit/routes/folder.route', function() {
             folderServiceStub.getFolder = function(user, id, done) {
                 return done({ message: 'Mongoose error' });
             };
-            var data = {
-                parent: new randexp(/^[0-9a-f]{24}$/).gen(),
-                name: "folder name",
-                description: "folder description"
+            folderServiceStub.saveFolder = function(user, folder, done) {
+                throw new Error("Should have not been called");
             };
-            request.put('/v1/folders/id')
-                .send(data)
+            
+            request.put('/v1/folders/' + folder._id)
+                .send(folder)
                 .end(function(err, res) {
                     if (err) throw err;
                     res.status.should.be.equal(500);
                     done();
                 });
         });
+        it('should return 404', function(done) {
+            folderServiceStub.getFolder = function(user, id, done) {
+                return done(null, false);
+            };
+            folderServiceStub.saveFolder = function(user, folder, done) {
+                throw new Error("Should have not been called");
+            };
+            
+            request.put('/v1/folders/' + folder._id)
+                .send(folder)
+                .end(function(err, res) {
+                    if (err) throw err;
+                    res.status.should.be.equal(404);
+                    done();
+                });
+        });
+        
         it('should return 500', function(done) {
             folderServiceStub.getFolder = function(user, id, done) {
                 return done(null, {});
@@ -205,13 +238,9 @@ describe('unit/routes/folder.route', function() {
             folderServiceStub.saveFolder = function(user, folder, done) {
                 return done({ message: 'Mongoose error' });
             };
-            var data = {
-                parent: new randexp(/^[0-9a-f]{24}$/).gen(),
-                name: "folder name",
-                description: "folder description"
-            };
-            request.put('/v1/folders/id')
-                .send(data)
+            
+            request.put('/v1/folders/' + folder._id)
+                .send(folder)
                 .end(function(err, res) {
                     if (err) throw err;
                     res.status.should.be.equal(500);
@@ -219,13 +248,18 @@ describe('unit/routes/folder.route', function() {
                 });
         });
         it('should return 422', function(done) {
-            var data = {
-                parent: 'invalid id',
-                name: "folder name",
-                description: "folder description"
+            var body = {
+                parent: 'invalid ' + folder._id
             };
-            request.put('/v1/folders/id')
-                .send(data)
+            folderServiceStub.getFolder = function(user, id, done) {
+                return done(null, {});
+            };
+            folderServiceStub.saveFolder = function(user, folder, done) {
+                throw new Error("Should have not been called");
+            };
+            
+            request.put('/v1/folders/' + folder._id)
+                .send(body)
                 .end(function(err, res) {
                     if (err) throw err;
                     res.status.should.be.equal(422);
@@ -241,13 +275,9 @@ describe('unit/routes/folder.route', function() {
             folderServiceStub.saveFolder = function(user, folder, done) {
                 return done(null, {});
             };
-            var data = {
-                parent: new randexp(/^[0-9a-f]{24}$/).gen(),
-                name: "folder name",
-                description: "folder description"
-            };
-            request.put('/v1/folders/id')
-                .send(data)
+            
+            request.put('/v1/folders/' + folder._id)
+                .send(folder)
                 .end(function(err, res) {
                     if (err) throw err;
                     res.status.should.be.equal(200);
@@ -261,13 +291,33 @@ describe('unit/routes/folder.route', function() {
             folderServiceStub.getFolder = function(user, id, done) {
                 return done({ message: 'Mongoose error' });
             };
-            request.delete('/v1/folders/id')
+            folderServiceStub.deleteFolder = function(user, id, done) {
+                throw new Error("Should have not been called");
+            };
+            
+            request.delete('/v1/folders/' + folder._id)
                 .end(function(err, res) {
                     if (err) throw err;
                     res.status.should.be.equal(500);
                     done();
                 });
         });
+        it('should return 404', function(done) {
+            folderServiceStub.getFolder = function(user, id, done) {
+                return done(null, false);
+            };
+            folderServiceStub.deleteFolder = function(user, id, done) {
+                throw new Error("Should have not been called");
+            };
+            
+            request.delete('/v1/folders/' + folder._id)
+                .end(function(err, res) {
+                    if (err) throw err;
+                    res.status.should.be.equal(404);
+                    done();
+                });
+        });
+        
         it('should return 500', function(done) {
             folderServiceStub.getFolder = function(user, id, done) {
                 return done(null, {});
@@ -275,7 +325,8 @@ describe('unit/routes/folder.route', function() {
             folderServiceStub.deleteFolder = function(user, id, done) {
                 return done({ message: 'Mongoose error' });
             };
-            request.delete('/v1/folders/id')
+            
+            request.delete('/v1/folders/' + folder._id)
                 .end(function(err, res) {
                     if (err) throw err;
                     res.status.should.be.equal(500);
@@ -289,12 +340,8 @@ describe('unit/routes/folder.route', function() {
             folderServiceStub.deleteFolder = function(user, id, done) {
                 return done();
             };
-            var data = {
-                parent: new randexp(/^[0-9a-f]{24}$/).gen(),
-                name: "folder name",
-                description: "folder description"
-            };
-            request.delete('/v1/folders/id')
+            
+            request.delete('/v1/folders/' + folder._id)
                 .end(function(err, res) {
                     if (err) throw err;
                     res.status.should.be.equal(204);
