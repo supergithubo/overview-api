@@ -11,6 +11,16 @@ module.exports = function(opts) {
     var Folder = require('../models/folder.model').model;
     var builder = require('../helpers/document-builder');
     
+    function getFolder(req, res, next) {
+        folderService.getFolder(req.user, req.params.folder_id, function(err, folder) {
+            if (err) return next(err);
+            if (!folder) return res.status(404).send('Folder not found');
+            
+            req.folder = folder;
+            return next();
+        });
+    }
+    
     router.route('/folders')
         .get(auth.authenticate, function(req, res, next) {
             folderService.getFolders(req.user, function(err, folders) {
@@ -30,34 +40,22 @@ module.exports = function(opts) {
         });
         
     router.route('/folders/:folder_id')
-        .get(auth.authenticate, function(req, res, next) {
-            folderService.getFolder(req.user, req.params.folder_id, function(err, folder) {
+        .get(auth.authenticate, getFolder, function(req, res, next) {
+            return res.json(req.folder);
+        })
+        .put(auth.authenticate, getFolder, validateReq(scenario.folder.update), function(req, res, next) {
+            builder.build(req.folder, Folder, req.body, 'is_root,created_at,updated_at');
+            folderService.saveFolder(req.user, req.folder, function(err, folder) {
                 if (err) return next(err);
-
+                
                 return res.json(folder);
             });
         })
-        .put(auth.authenticate, validateReq(scenario.folder.update), function(req, res, next) {
-            folderService.getFolder(req.user, req.params.folder_id, function(err, folder) {
+        .delete(auth.authenticate, getFolder, function(req, res, next) {
+            folderService.deleteFolder(req.user, req.folder._id, function(err) {
                 if (err) return next(err);
                 
-                builder.build(folder, Folder, req.body, 'is_root,created_at,updated_at');
-                folderService.saveFolder(req.user, folder, function(err, folder) {
-                    if (err) return next(err);
-                    
-                    return res.json(folder);
-                });
-            });
-        })
-        .delete(auth.authenticate, function(req, res, next) {
-            folderService.getFolder(req.user, req.params.folder_id, function(err, folder) {
-                if (err) return next(err);
-                
-                folderService.deleteFolder(req.user, folder._id, function(err) {
-                    if (err) return next(err);
-                    
-                    return res.status(204).send();
-                });
+                return res.status(204).send();
             });
         })
     return router;
