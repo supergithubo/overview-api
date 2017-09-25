@@ -16,3 +16,15 @@ exports.folder = {
         }
     }
 };
+
+exports.task = {
+    new: {
+        body: {
+            name: Joi.string().required(),
+            description: Joi.string().required()
+        }
+    },
+    update: {
+        body: {}
+    }
+};
