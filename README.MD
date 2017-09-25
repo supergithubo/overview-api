@@ -44,11 +44,11 @@ npm install
 - [x] DELETE /folders/:folder
 
 ### Task
-- [ ] GET /folders/:folder/tasks
-- [ ] POST /folders/:folder/tasks
-- [ ] GET /folders/:folder/tasks/:task
-- [ ] PUT /folders/:folder/tasks/:task
-- [ ] DELETE /folders/:folder/tasks/:task
+- [x] GET /folders/:folder/tasks
+- [x] POST /folders/:folder/tasks
+- [x] GET /folders/:folder/tasks/:task
+- [x] PUT /folders/:folder/tasks/:task
+- [x] DELETE /folders/:folder/tasks/:task
 
 ### Log
 - [ ] GET /folders/:folder/tasks/:task/log
