@@ -1,6 +1,7 @@
 var _ = require("underscore");
 
-exports.build = function(doc, SchemaTarget, data, safe = '') {
+exports.build = function(doc, SchemaTarget, data, safe) {
+    safe = (typeof safe !== 'undefined') ?  safe : '';
     var safeFields = safe.split(',');
     for (var field in SchemaTarget.schema.paths) {
         if ((field !== '_id') && (field !== '__v') && (safeFields.indexOf(field) < 0)) {

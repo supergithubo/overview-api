@@ -14,7 +14,8 @@ describe('unit/helpers/document-builder', function() {
         done();
     });
     
-    function compareAttr(obj, obj2, except = '') {
+    function compareAttr(obj, obj2, except) {
+        except = (typeof except !== 'undefined') ?  except : '';
         var attr = Object.keys(obj.toObject());
         for(var i = 0; i < attr.length; i++) {
             var key = attr[i];
