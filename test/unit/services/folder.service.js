@@ -24,8 +24,11 @@ describe('unit/services/folder.service', function() {
     
     describe('getFolders', function() {
         it('should get', function(done) {
-            FolderStub.model.find = function(obj, callback) {
-                return callback(null, [{ _id: folder_id, account: obj.account }]);
+            FolderStub.model.aggregate = function(opts, callback) {
+                return callback(null, [
+                    { _id: folder_id, account: opts[0].$match.account, children: [{ _id: '' }] },
+                    { _id: folder_id, account: opts[0].$match.account, children: [{}] }
+                ]);
             };
             folderService.getFolders({ _id: user_id }, function(err, folders) {
                 should.not.exist(err);
@@ -35,7 +38,7 @@ describe('unit/services/folder.service', function() {
             });
         });
         it('should not get any due to error', function(done) {
-            FolderStub.model.find = function(obj, callback) {
+            FolderStub.model.aggregate = function(opts, callback) {
                 return callback({ error: 'some error' });
             };
             folderService.getFolders({ _id: user_id }, function(err, folders) {

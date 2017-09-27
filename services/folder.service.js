@@ -6,9 +6,26 @@ module.exports = function() {
     var module = {};
     
     module.getFolders = function(user, done) {
-        Folder.find({ account: user._id, is_root: true }, function(err, folders) {
+        Folder.aggregate([
+            { $match: { account: user._id, is_root: true } },
+            { $lookup: { from: 'folders', localField: '_id', foreignField: 'parent', as: 'children' } },
+            { $unwind: { path: '$children', preserveNullAndEmptyArrays: true } },
+            { $lookup: { from: 'folders', localField: 'children._id', foreignField: 'parent', as: 'children.children' } },
+            { $project: { name: 1, 'children._id': 1, 'children.name': 1, 'children.children': 1 } },
+            { $group : { _id : "$_id", name: { $first: "$name" } , children: { $push: '$children'} } },
+        ], function(err, folders) {
             if (err) return done(err);
-
+            
+            for(i = 0; i < folders.length; i++) {
+                var folder = folders[i];
+                for(j = 0; j < folder.children.length; j++) {
+                    var child = folder.children[j];
+                    if(typeof child._id == "undefined") {
+                        folders[i].children = [];
+                    }
+                }
+            }
+            
             return done(null, folders);
         });
     }
