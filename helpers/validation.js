@@ -28,3 +28,15 @@ exports.task = {
         body: {}
     }
 };
+
+exports.workflow = {
+    new: {
+        body: {
+            name: Joi.string().required(),
+            type: Joi.string().required()
+        }
+    },
+    update: {
+        body: {}
+    }
+}

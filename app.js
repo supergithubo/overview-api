@@ -31,15 +31,15 @@ app.use(bodyParser.urlencoded({
 // =============================================================================
 
 var folderRouter = require('./routes/folder.route')(config);
+var workflowRouter = require('./routes/workflow.route')(config);
 var taskRouter = require('./routes/task.route')(config);
 
 app.use('/v1', [
-    folderRouter, taskRouter,
+    folderRouter, workflowRouter, taskRouter,
     expressAuth.adminRouter, expressAuth.authRouter, expressAuth.selfRouter
 ]);
 
 app.use(function(err, req, res, next) {
-    //console.log(err);
     if(err.name == 'ValidationError' || err.message == 'validation error') {
         return res.status(422).json(err);
     }

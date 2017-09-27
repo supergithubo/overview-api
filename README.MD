@@ -37,7 +37,7 @@ npm install
 - [x] POST /auth/password/reset/confirm
 
 ### Folder
-- [ ] GET /folders
+- [x] GET /folders
 - [x] POST /folders
 - [x] GET /folders/:folder
 - [x] PUT /folders/:folder
@@ -58,11 +58,11 @@ npm install
 - [ ] DELETE /folders/:folder/tasks/:task/log/:log
 
 ### Workflow
-- [ ] GET /workflows
-- [ ] POST /workflows
-- [ ] GET /workflows/:workflow
-- [ ] PUT /workflows/:workflow
-- [ ] DELETE /workflows/:workflow
+- [x] GET /workflows
+- [x] POST /workflows
+- [x] GET /workflows/:workflow
+- [x] PUT /workflows/:workflow
+- [x] DELETE /workflows/:workflow
 
 ### Company / Client
 - [ ] GET /companies
