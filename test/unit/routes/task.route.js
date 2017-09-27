@@ -423,7 +423,7 @@ describe('unit/routes/task.route', function() {
                 return done(null, {});
             };
             taskServiceStub.saveTask = function(user, task, done) {
-                return done(null, {});
+                throw new Error("Should have not been called");
             };
             
             request.put('/v1/folders/' + folder._id + '/tasks/' + task._id)
