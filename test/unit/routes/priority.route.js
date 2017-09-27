@@ -14,26 +14,24 @@ var validation = require('express-validation');
 
 var config = require(dir + '../config');
 var expressAuth = require('express-auth')(config);
-var Workflow = require(dir + '../models/workflow.model').model;
-var type = require(dir + '../models/workflow-type.enum');
+var Priority = require(dir + '../models/priority.model').model;
 var clearDB = require('mocha-mongoose')(config.db.uri, {
     noClear: true
 });
 
-describe('unit/routes/workflow.route', function() {
+describe('unit/routes/priority.route', function() {
     
     var request;
-    var workflowServiceStub;
-    var workflow;
+    var priorityServiceStub;
+    var priority;
     
     before(function(done) {
-        workflow = {
+        priority = {
             _id: new randexp(/^[0-9a-f]{24}$/).gen(),
-            name: "workflow name",
-            type: type.enum.DEFERRED.key
+            name: "priority name"
         };
         
-        workflowServiceStub = {};
+        priorityServiceStub = {};
         var expressAuthStub = {
             authMiddleware: {
                 authenticate: function(req, res, next) {
@@ -54,9 +52,9 @@ describe('unit/routes/workflow.route', function() {
             extended: false
         }));
         
-        var workflowRouter = proxyquire(dir + '../routes/workflow.route', {
-            '../services/workflow.service': function() {
-                return workflowServiceStub;
+        var priorityRouter = proxyquire(dir + '../routes/priority.route', {
+            '../services/priority.service': function() {
+                return priorityServiceStub;
             },
             'express-auth': function(opts) {
                 return expressAuthStub;
@@ -64,7 +62,7 @@ describe('unit/routes/workflow.route', function() {
         })(config);
 
         app.use('/v1', [
-            workflowRouter
+            priorityRouter
         ]);
         app.use(function(err, req, res, next) {
             if(err.name == 'ValidationError' || err.message == 'validation error') {
@@ -79,13 +77,13 @@ describe('unit/routes/workflow.route', function() {
         done();
     });
     
-    describe('GET v1/workflows', function() {
+    describe('GET v1/priorities', function() {
         it('should return 500', function(done) {
-            workflowServiceStub.getWorkflows = function(user, done) {
+            priorityServiceStub.getPriorities = function(user, done) {
                 return done({ message: 'Mongoose error' });
             };
             
-            request.get('/v1/workflows')
+            request.get('/v1/priorities')
                 .end(function(err, res) {
                     if (err) throw err;
                     res.status.should.be.equal(500);
@@ -93,11 +91,11 @@ describe('unit/routes/workflow.route', function() {
                 });
         });
         it('should return 200', function(done) {
-            workflowServiceStub.getWorkflows = function(user, done) {
+            priorityServiceStub.getPriorities = function(user, done) {
                 return done(null, []);
             };
             
-            request.get('/v1/workflows')
+            request.get('/v1/priorities')
                 .end(function(err, res) {
                     if (err) throw err;
                     res.status.should.be.equal(200);
@@ -106,14 +104,14 @@ describe('unit/routes/workflow.route', function() {
         });
     });
     
-    describe('POST v1/workflows', function() {
+    describe('POST v1/priorities', function() {
         it('should return 500', function(done) {
-            workflowServiceStub.saveWorkflow = function(user, workflow, done) {
+            priorityServiceStub.savePriority = function(user, priority, done) {
                 return done({ message: 'Mongoose error' });
             };
             
-            request.post('/v1/workflows')
-                .send(workflow)
+            request.post('/v1/priorities')
+                .send(priority)
                 .end(function(err, res) {
                     if (err) throw err;
                     res.status.should.be.equal(500);
@@ -123,29 +121,27 @@ describe('unit/routes/workflow.route', function() {
         it('should return 422', function(done) {
             var body = {};
 
-            workflowServiceStub.saveWorkflow = function(user, workflow, done) {
+            priorityServiceStub.savePriority = function(user, priority, done) {
                 throw new Error("Should have not been called");
             };
             
-            request.post('/v1/workflows')
+            request.post('/v1/priorities')
                 .send(body)
                 .end(function(err, res) {
                     if (err) throw err;
                     res.status.should.be.equal(422);
                     res.body.errors[0].field[0].should.be.equal('name');
                     res.body.errors[0].types[0].should.be.equal('any.required');
-                    res.body.errors[1].field[0].should.be.equal('type');
-                    res.body.errors[1].types[0].should.be.equal('any.required');
                     done();
                 });
         });
         it('should return 201', function(done) {
-            workflowServiceStub.saveWorkflow = function(user, workflow, done) {
+            priorityServiceStub.savePriority = function(user, priority, done) {
                 return done(null, {});
             };
             
-            request.post('/v1/workflows')
-                .send(workflow)
+            request.post('/v1/priorities')
+                .send(priority)
                 .end(function(err, res) {
                     if (err) throw err;
                     res.status.should.be.equal(201);
@@ -154,13 +150,13 @@ describe('unit/routes/workflow.route', function() {
         });
     });
     
-    describe('GET v1/workflows/:workflow', function() {
+    describe('GET v1/priorities/:priority', function() {
         it('should return 500', function(done) {
-            workflowServiceStub.getWorkflow = function(user, id, done) {
+            priorityServiceStub.getPriority = function(user, id, done) {
                 return done({ message: 'Mongoose error' });
             };
             
-            request.get('/v1/workflows/' + workflow._id)
+            request.get('/v1/priorities/' + priority._id)
                 .end(function(err, res) {
                     if (err) throw err;
                     res.status.should.be.equal(500);
@@ -168,11 +164,11 @@ describe('unit/routes/workflow.route', function() {
                 });
         });
         it('should return 404', function(done) {
-            workflowServiceStub.getWorkflow = function(user, id, done) {
+            priorityServiceStub.getPriority = function(user, id, done) {
                 return done(null, false);
             };
             
-            request.get('/v1/workflows/' + workflow._id)
+            request.get('/v1/priorities/' + priority._id)
                 .end(function(err, res) {
                     if (err) throw err;
                     res.status.should.be.equal(404);
@@ -180,11 +176,11 @@ describe('unit/routes/workflow.route', function() {
                 });
         });
         it('should return 200', function(done) {
-            workflowServiceStub.getWorkflow = function(user, id, done) {
+            priorityServiceStub.getPriority = function(user, id, done) {
                 return done(null, {});
             };
             
-            request.get('/v1/workflows/' + workflow._id)
+            request.get('/v1/priorities/' + priority._id)
                 .end(function(err, res) {
                     if (err) throw err;
                     res.status.should.be.equal(200);
@@ -193,17 +189,17 @@ describe('unit/routes/workflow.route', function() {
         });
     });
     
-    describe('PUT v1/workflows/:workflow', function() {
+    describe('PUT v1/priorities/:priority', function() {
         it('should return 500', function(done) {
-            workflowServiceStub.getWorkflow = function(user, id, done) {
+            priorityServiceStub.getPriority = function(user, id, done) {
                 return done({ message: 'Mongoose error' });
             };
-            workflowServiceStub.saveWorkflow = function(user, workflow, done) {
+            priorityServiceStub.savePriority = function(user, priority, done) {
                 throw new Error("Should have not been called");
             };
             
-            request.put('/v1/workflows/' + workflow._id)
-                .send(workflow)
+            request.put('/v1/priorities/' + priority._id)
+                .send(priority)
                 .end(function(err, res) {
                     if (err) throw err;
                     res.status.should.be.equal(500);
@@ -211,15 +207,15 @@ describe('unit/routes/workflow.route', function() {
                 });
         });
         it('should return 404', function(done) {
-            workflowServiceStub.getWorkflow = function(user, id, done) {
+            priorityServiceStub.getPriority = function(user, id, done) {
                 return done(null, false);
             };
-            workflowServiceStub.saveWorkflow = function(user, workflow, done) {
+            priorityServiceStub.savePriority = function(user, priority, done) {
                 throw new Error("Should have not been called");
             };
             
-            request.put('/v1/workflows/' + workflow._id)
-                .send(workflow)
+            request.put('/v1/priorities/' + priority._id)
+                .send(priority)
                 .end(function(err, res) {
                     if (err) throw err;
                     res.status.should.be.equal(404);
@@ -228,15 +224,15 @@ describe('unit/routes/workflow.route', function() {
         });
         
         it('should return 500', function(done) {
-            workflowServiceStub.getWorkflow = function(user, id, done) {
+            priorityServiceStub.getPriority = function(user, id, done) {
                 return done(null, {});
             };
-            workflowServiceStub.saveWorkflow = function(user, workflow, done) {
+            priorityServiceStub.savePriority = function(user, priority, done) {
                 return done({ message: 'Mongoose error' });
             };
             
-            request.put('/v1/workflows/' + workflow._id)
-                .send(workflow)
+            request.put('/v1/priorities/' + priority._id)
+                .send(priority)
                 .end(function(err, res) {
                     if (err) throw err;
                     res.status.should.be.equal(500);
@@ -245,14 +241,14 @@ describe('unit/routes/workflow.route', function() {
         });
         it.skip('should return 422', function(done) {
             var data = {};
-            workflowServiceStub.getWorkflow = function(user, id, done) {
+            priorityServiceStub.getPriority = function(user, id, done) {
                 return done(null, {});
             };
-            workflowServiceStub.saveWorkflow = function(user, workflow, done) {
+            priorityServiceStub.savePriority = function(user, priority, done) {
                 throw new Error("Should have not been called");
             };
             
-            request.put('/v1/workflows/' + workflow._id)
+            request.put('/v1/priorities/' + priority._id)
                 .send(data)
                 .end(function(err, res) {
                     if (err) throw err;
@@ -261,15 +257,15 @@ describe('unit/routes/workflow.route', function() {
                 });
         });
         it('should return 200', function(done) {
-            workflowServiceStub.getWorkflow = function(user, id, done) {
+            priorityServiceStub.getPriority = function(user, id, done) {
                 return done(null, {});
             };
-            workflowServiceStub.saveWorkflow = function(user, workflow, done) {
+            priorityServiceStub.savePriority = function(user, priority, done) {
                 return done(null, {});
             };
             
-            request.put('/v1/workflows/' + workflow._id)
-                .send(workflow)
+            request.put('/v1/priorities/' + priority._id)
+                .send(priority)
                 .end(function(err, res) {
                     if (err) throw err;
                     res.status.should.be.equal(200);
@@ -278,16 +274,16 @@ describe('unit/routes/workflow.route', function() {
         });
     });
     
-    describe('DELETE v1/workflows/:workflow', function() {
+    describe('DELETE v1/priorities/:priority', function() {
         it('should return 500', function(done) {
-            workflowServiceStub.getWorkflow = function(user, id, done) {
+            priorityServiceStub.getPriority = function(user, id, done) {
                 return done({ message: 'Mongoose error' });
             };
-            workflowServiceStub.deleteWorkflow = function(user, id, done) {
+            priorityServiceStub.deletePriority = function(user, id, done) {
                 throw new Error("Should have not been called");
             };
             
-            request.delete('/v1/workflows/' + workflow._id)
+            request.delete('/v1/priorities/' + priority._id)
                 .end(function(err, res) {
                     if (err) throw err;
                     res.status.should.be.equal(500);
@@ -295,14 +291,14 @@ describe('unit/routes/workflow.route', function() {
                 });
         });
         it('should return 404', function(done) {
-            workflowServiceStub.getWorkflow = function(user, id, done) {
+            priorityServiceStub.getPriority = function(user, id, done) {
                 return done(null, false);
             };
-            workflowServiceStub.deleteWorkflow = function(user, id, done) {
+            priorityServiceStub.deletePriority = function(user, id, done) {
                 throw new Error("Should have not been called");
             };
             
-            request.delete('/v1/workflows/' + workflow._id)
+            request.delete('/v1/priorities/' + priority._id)
                 .end(function(err, res) {
                     if (err) throw err;
                     res.status.should.be.equal(404);
@@ -311,14 +307,14 @@ describe('unit/routes/workflow.route', function() {
         });
         
         it('should return 500', function(done) {
-            workflowServiceStub.getWorkflow = function(user, id, done) {
+            priorityServiceStub.getPriority = function(user, id, done) {
                 return done(null, {});
             };
-            workflowServiceStub.deleteWorkflow = function(user, id, done) {
+            priorityServiceStub.deletePriority = function(user, id, done) {
                 return done({ message: 'Mongoose error' });
             };
             
-            request.delete('/v1/workflows/' + workflow._id)
+            request.delete('/v1/priorities/' + priority._id)
                 .end(function(err, res) {
                     if (err) throw err;
                     res.status.should.be.equal(500);
@@ -326,14 +322,14 @@ describe('unit/routes/workflow.route', function() {
                 });
         });
         it('should return 204', function(done) {
-            workflowServiceStub.getWorkflow = function(user, id, done) {
+            priorityServiceStub.getPriority = function(user, id, done) {
                 return done(null, {});
             };
-            workflowServiceStub.deleteWorkflow = function(user, id, done) {
+            priorityServiceStub.deletePriority = function(user, id, done) {
                 return done();
             };
             
-            request.delete('/v1/workflows/' + workflow._id)
+            request.delete('/v1/priorities/' + priority._id)
                 .end(function(err, res) {
                     if (err) throw err;
                     res.status.should.be.equal(204);
