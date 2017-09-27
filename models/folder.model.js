@@ -24,14 +24,6 @@ var FolderSchema = new mongoose.Schema({
         default: false
     },
     project: {
-        name: {
-            type: String,
-            required: isProject
-        },
-        description: {
-            type: String,
-            required: isProject
-        },
         start_date: {
             type: Date,
             required: isProject

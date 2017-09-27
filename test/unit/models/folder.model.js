@@ -27,8 +27,6 @@ describe('unit/models/folder.model', function() {
             folder.name = 'folder name';
             folder.description = 'folder description';
             folder.project = {
-                name: 'project name',
-                description: 'project description',
                 start_date: Date.now(),
                 end_date: Date.now(),
                 status: status.enum.PENDING.key
@@ -105,8 +103,6 @@ describe('unit/models/folder.model', function() {
             folder.description = 'folder description';
             folder.is_project = true;
             folder.save(function(err, f) {
-                should.exist(err.errors['project.name']);
-                should.exist(err.errors['project.description']);
                 should.exist(err.errors['project.start_date']);
                 should.exist(err.errors['project.status']);
                 done();
@@ -119,8 +115,6 @@ describe('unit/models/folder.model', function() {
             folder.description = 'folder description';
             folder.is_project = true;
             folder.project = {
-                name: 'project name',
-                description: 'project description',
                 start_date: Date.now(),
                 end_date: Date.now(),
                 status: status.enum.PENDING.key
@@ -137,8 +131,6 @@ describe('unit/models/folder.model', function() {
                 should.exist(folder._id);
                 should.exist(folder.updated_at);
                 should.exist(folder.created_at);
-                should.exist(folder.project.name);
-                should.exist(folder.project.description);
                 should.exist(folder.project.start_date);
                 should.exist(folder.project.status);
                 done();
@@ -153,8 +145,6 @@ describe('unit/models/folder.model', function() {
             folder.name = 'folder name';
             folder.description = 'folder description';
             folder.project = {
-                name: 'project name',
-                description: 'project description',
                 start_date: Date.now(),
                 end_date: Date.now(),
                 status: status.enum.PENDING.key
