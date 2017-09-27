@@ -16,12 +16,6 @@ var TaskSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    start_date: {
-        type: Date
-    },
-    end_date: {
-        type: Date
-    },
     due_date: {
         type: Date
     },
