@@ -67,7 +67,6 @@ describe('unit/routes/workflow.route', function() {
             workflowRouter
         ]);
         app.use(function(err, req, res, next) {
-            console.log(JSON.stringify(err));
             if(err.name == 'ValidationError' || err.message == 'validation error') {
                 return res.status(422).json(err);
             }
@@ -135,6 +134,8 @@ describe('unit/routes/workflow.route', function() {
                     res.status.should.be.equal(422);
                     res.body.errors[0].field[0].should.be.equal('name');
                     res.body.errors[0].types[0].should.be.equal('any.required');
+                    res.body.errors[1].field[0].should.be.equal('type');
+                    res.body.errors[1].types[0].should.be.equal('any.required');
                     done();
                 });
         });
