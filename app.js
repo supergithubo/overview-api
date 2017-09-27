@@ -32,10 +32,11 @@ app.use(bodyParser.urlencoded({
 
 var folderRouter = require('./routes/folder.route')(config);
 var workflowRouter = require('./routes/workflow.route')(config);
+var priorityRouter = require('./routes/priority.route')(config);
 var taskRouter = require('./routes/task.route')(config);
 
 app.use('/v1', [
-    folderRouter, workflowRouter, taskRouter,
+    folderRouter, workflowRouter, priorityRouter, taskRouter,
     expressAuth.adminRouter, expressAuth.authRouter, expressAuth.selfRouter
 ]);
 

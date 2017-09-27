@@ -40,3 +40,14 @@ exports.workflow = {
         body: {}
     }
 }
+
+exports.priority = {
+    new: {
+        body: {
+            name: Joi.string().required()
+        }
+    },
+    update: {
+        body: {}
+    }
+}

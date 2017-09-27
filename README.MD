@@ -64,6 +64,13 @@ npm install
 - [x] PUT /workflows/:workflow
 - [x] DELETE /workflows/:workflow
 
+### Priority
+- [x] GET /priorities
+- [x] POST /priorities
+- [x] GET /priorities/:priority
+- [x] PUT /priorities/:priority
+- [x] DELETE /priorities/:priority
+
 ### Company / Client
 - [ ] GET /companies
 - [ ] POST /companies
