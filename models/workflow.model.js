@@ -1,6 +1,7 @@
 // models/workflow.model.js
 
 var mongoose = require('mongoose');
+var idValidator = require('mongoose-id-validator');
 
 var type = require('./workflow-type.enum');
 
@@ -35,6 +36,7 @@ var WorkflowSchema = new mongoose.Schema({
         default: Date.now
     }
 });
+WorkflowSchema.plugin(idValidator);
 
 WorkflowSchema.pre('save', function(done) {
     var workflow = this;

@@ -1,6 +1,7 @@
 // models/folder.model.js
 
 var mongoose = require('mongoose');
+var idValidator = require('mongoose-id-validator');
 
 var status = require('./folder-status.enum');
 
@@ -57,6 +58,7 @@ var FolderSchema = new mongoose.Schema({
         default: Date.now
     }
 });
+FolderSchema.plugin(idValidator);
 
 function isProject() {
     return this.is_project;

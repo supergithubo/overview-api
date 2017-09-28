@@ -1,6 +1,7 @@
 // models/priority.model.js
 
 var mongoose = require('mongoose');
+var idValidator = require('mongoose-id-validator');
 
 var PrioritySchema = new mongoose.Schema({
     account: {
@@ -25,6 +26,7 @@ var PrioritySchema = new mongoose.Schema({
         default: Date.now
     }
 });
+PrioritySchema.plugin(idValidator);
 
 PrioritySchema.pre('save', function(done) {
     var priority = this;

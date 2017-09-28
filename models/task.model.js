@@ -1,6 +1,7 @@
 // models/task.model.js
 
 var mongoose = require('mongoose');
+var idValidator = require('mongoose-id-validator');
 
 var TaskSchema = new mongoose.Schema({
     folder: {
@@ -32,6 +33,7 @@ var TaskSchema = new mongoose.Schema({
         default: Date.now
     }
 });
+TaskSchema.plugin(idValidator);
 
 TaskSchema.pre('save', function(done) {
     var task = this;
