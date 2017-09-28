@@ -20,6 +20,16 @@ var TaskSchema = new mongoose.Schema({
     due_date: {
         type: Date
     },
+    priority: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Priority',
+        required: true
+    },
+    status: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Workflow',
+        required: true
+    },
     color: {
         type: String,
         default: '#f3f3f3'

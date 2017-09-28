@@ -9,6 +9,15 @@ var async = require('async');
 var User = require('express-auth')().user.model;
 var Task = require(dir + '../models/task.model').model;
 var Folder = require(dir + '../models/folder.model').model;
+var Priority = require(dir + '../models/priority.model').model;
+var Workflow = require(dir + '../models/workflow.model').model;
+
+var folderStatus = require(dir + '../models/folder-status.enum');
+var workflowType = require(dir + '../models/workflow-type.enum');
+var userRoles = require('express-auth')().roles;
+var config = require(dir + '../config');
+var Task = require(dir + '../models/task.model').model;
+var Folder = require(dir + '../models/folder.model').model;
 
 var folderStatus = require(dir + '../models/folder-status.enum');
 var userRoles = require('express-auth')().roles;
@@ -19,7 +28,7 @@ var clearDB = require('mocha-mongoose')(config.db.uri, {
 
 describe('unit/models/task.model', function() {
   
-    var account, folder;
+    var account, folder, priority, workflow;
     
     before(function(done) {
         mongoose.Promise = global.Promise;
@@ -39,11 +48,35 @@ describe('unit/models/task.model', function() {
                 });
             },
             function(callback) {
-                folder = new Folder({ account: account._id, name: 'name', description: 'description' });
-                folder.save(function(err, r) {
-                    if(err) throw err;
-                    folder = r;
-                    callback();
+                async.parallel([
+                    function(callback) {
+                        folder = new Folder({ account: account._id, name: 'name', description: 'description' });
+                        folder.save(function(err, r) {
+                            if(err) throw err;
+                            folder = r;
+                            callback();
+                        });
+                    },
+                    function(callback) {
+                        priority = new Priority({ account: account._id, name: 'name'});
+                        priority.save(function(err, r) {
+                            if(err) throw err;
+                            priority = r;
+                            callback();
+                        });
+                    },
+                    function(callback) {
+                        workflow = new Workflow({ account: account._id, name: 'name', type: workflowType.enum.DEFERRED.key});
+                        workflow.save(function(err, r) {
+                            if(err) throw err;
+                            workflow = r;
+                            callback();
+                        });
+                    }
+                ], function(err) {
+                    if(err) callback(err);
+                    
+                    callback(null);
                 });
             }
         ], function(err) {
@@ -55,12 +88,14 @@ describe('unit/models/task.model', function() {
     
     describe('model save', function() {
         it('should satisfy task with folder, name & description', function(done) {
-            var task = new Task({ folder: folder._id, name: 'name', description: 'desc'});
+            var task = new Task({ folder: folder._id, name: 'name', description: 'desc', priority: priority._id, status: workflow._id});
             task.save(function(err, f) {
                 if(err) throw err;
                 f.folder.should.be.equal(task.folder);
                 f.name.should.be.equal(task.name);
                 f.description.should.be.equal(task.description);
+                f.priority.should.be.equal(task.priority);
+                f.status.should.be.equal(task.status);
                 should.exist(task.__v);
                 should.exist(task._id);
                 should.exist(task.color);
@@ -75,15 +110,19 @@ describe('unit/models/task.model', function() {
                 err.errors['folder'].kind.should.be.equal('required');
                 err.errors['name'].kind.should.be.equal('required');
                 err.errors['description'].kind.should.be.equal('required');
-                Object.keys(err.errors).length.should.be.equal(3);
+                err.errors['priority'].kind.should.be.equal('required');
+                err.errors['status'].kind.should.be.equal('required');
+                Object.keys(err.errors).length.should.be.equal(5);
                 done();
             })
         });
         it('should validate invalid references', function(done) {
-            var task = new Task({ folder: 'id', name: 'name', description: 'desc'});
+            var task = new Task({ folder: 'id', name: 'name', description: 'desc', priority: 'id', status: 'id'});
             task.save(function(err, f) {
                 err.errors['folder'].kind.should.be.equal('ObjectID');
-                Object.keys(err.errors).length.should.be.equal(1);
+                err.errors['priority'].kind.should.be.equal('ObjectID');
+                err.errors['status'].kind.should.be.equal('ObjectID');
+                Object.keys(err.errors).length.should.be.equal(3);
                 done();
             })
         });
@@ -91,7 +130,7 @@ describe('unit/models/task.model', function() {
     
     describe('model update', function() {
         it('should update updated_at and not created_at upon task update', function(done) {
-            var task = new Task({ folder: folder._id, name: 'name', description: 'desc'});
+            var task = new Task({ folder: folder._id, name: 'name', description: 'desc', priority: priority._id, status: workflow._id});
             
             task.save(function(err, f) {
                 if(err) throw err;
