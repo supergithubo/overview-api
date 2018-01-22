@@ -6,75 +6,79 @@ var idValidator = require('mongoose-id-validator');
 var status = require('./folder-status.enum');
 
 var FolderSchema = new mongoose.Schema({
-    account: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        required: true
+  account: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
+  name: {
+    type: String,
+    required: true
+  },
+  description: {
+    type: String,
+    required: true
+  },
+  color: {
+    type: String,
+    default: '#f3f3f3'
+  },
+  is_project: {
+    type: Boolean,
+    required: true,
+    default: false
+  },
+  project: {
+    start_date: {
+      type: Date,
+      required: isProject
     },
-    name: {
-        type: String,
-        required: true
+    end_date: {
+      type: Date
     },
-    description: {
-        type: String,
-        required: true
-    },
-    is_project: {
-        type: Boolean,
-        required: true,
-        default: false
-    },
-    project: {
-        start_date: {
-            type: Date,
-            required: isProject
-        },
-        end_date: {
-            type: Date
-        },
-        status: {
-            type: String,
-            enum: {
-                values: status.keys,
-                message: '`{VALUE}` status currently not supported'
-            },
-            required: isProject
-        }
-    },
-    parent: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Folder'
-    },
-    is_root: {
-        type: Boolean,
-        default: true
-    },
-    created_at: {
-        type: Date, 
-        default: Date.now
-    },
-    updated_at: {
-        type: Date,
-        default: Date.now
+    status: {
+      type: String,
+      enum: {
+        values: status.keys,
+        message: '`{VALUE}` status currently not supported'
+      },
+      required: isProject
     }
+  },
+  parent: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Folder'
+  },
+  is_root: {
+    type: Boolean,
+    default: true
+  },
+  created_at: {
+    type: Date,
+    default: Date.now
+  },
+  updated_at: {
+    type: Date,
+    default: Date.now
+  }
 });
 FolderSchema.plugin(idValidator);
 
 function isProject() {
-    return this.is_project;
+  return this.is_project;
 }
 
 FolderSchema.pre('save', function(done) {
-    var folder = this;
-    folder.is_root = folder.parent ? false : true;
-    folder.updated_at = Date.now();
-    if(folder.isNew) {
-        folder.created_at = Date.now();
-    }
-    if(!folder.is_project) {
-        folder.project = undefined;
-    }
-    return done();
+  var folder = this;
+  folder.is_root = folder.parent ? false : true;
+  folder.updated_at = Date.now();
+  if(folder.isNew) {
+    folder.created_at = Date.now();
+  }
+  if(!folder.is_project) {
+    folder.project = undefined;
+  }
+  return done();
 });
 
 exports.schema = FolderSchema;

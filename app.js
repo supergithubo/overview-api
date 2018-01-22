@@ -16,17 +16,24 @@ var config = require('./config');
 var expressAuth = require('express-auth')(config);
 
 validation.options({
-    status: 422,
-    statusText: 'Unprocessable Entity'
+  status: 422,
+  statusText: 'Unprocessable Entity'
 });
 
 app.use(compression());
 app.use(bearerToken());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
-    extended: true
+  extended: true
 }));
-
+app.use(function (req, res, next) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  res.setHeader('Access-Control-Allow-Credentials', true);
+  res.setHeader('Access-Control-Max-Age', 86400);
+  return next();
+});
 // Routes
 // =============================================================================
 
@@ -36,16 +43,16 @@ var priorityRouter = require('./routes/priority.route')(config);
 var taskRouter = require('./routes/task.route')(config);
 
 app.use('/v1', [
-    folderRouter, workflowRouter, priorityRouter, taskRouter,
-    expressAuth.adminRouter, expressAuth.authRouter, expressAuth.selfRouter
+  folderRouter, workflowRouter, priorityRouter, taskRouter,
+  expressAuth.adminRouter, expressAuth.authRouter, expressAuth.selfRouter
 ]);
 
 app.use(function(err, req, res, next) {
-    if(err.name == 'ValidationError' || err.message == 'validation error') {
-        return res.status(422).json(err);
-    }
-    
-    return res.status(500).json(err);
+  if(err.name == 'ValidationError' || err.message == 'validation error') {
+    return res.status(422).json(err);
+  }
+
+  return res.status(500).json(err);
 });
 
 // Server Start
@@ -61,14 +68,14 @@ console.log('[Overview API] Listening on port ' + port);
 
 mongoose.Promise = global.Promise;
 mongoose.connect(config.db.uri, {
-    useMongoClient: true
+  useMongoClient: true
 });
 
 var db = mongoose.connection;
 
 db.on('error', console.error.bind(console, '[Overview API] Connection error: '));
 db.once('open', function() {
-    console.log('[Overview API] Connected to database on ' + config.db.uri);
+  console.log('[Overview API] Connected to database on ' + config.db.uri);
 });
 
 exports.server = server;
