@@ -11,7 +11,11 @@ exports.folder = {
     }
   },
   update: {
-    body: {}
+    body: {
+      name: Joi.string(),
+      description: Joi.string(),
+      parent: Joi.string().regex(/^[0-9a-fA-F]{24}$/)
+    }
   }
 };
 
@@ -23,7 +27,10 @@ exports.task = {
     }
   },
   update: {
-    body: {}
+    body: {
+      name: Joi.string(),
+      description: Joi.string()
+    }
   }
 };
 
@@ -35,7 +42,10 @@ exports.workflow = {
     }
   },
   update: {
-    body: {}
+    body: {
+      name: Joi.string(),
+      type: Joi.string()
+    }
   }
 };
 
@@ -46,6 +56,8 @@ exports.priority = {
     }
   },
   update: {
-    body: {}
+    body: {
+      name: Joi.string()
+    }
   }
 };

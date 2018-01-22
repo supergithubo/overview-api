@@ -247,8 +247,12 @@ describe('unit/routes/folder.route', function() {
           done();
         });
     });
-    it.skip('should return 422', function(done) {
-      var body = {};
+    it('should return 422', function(done) {
+      var body = {
+        name: '',
+        description: '',
+        parent: '12345'
+      };
       folderServiceStub.getFolder = function(user, id, done) {
         return done(null, {});
       };
@@ -261,6 +265,13 @@ describe('unit/routes/folder.route', function() {
         .end(function(err, res) {
           if (err) throw err;
           res.status.should.be.equal(422);
+          res.body.errors[0].field[0].should.be.equal('name');
+          res.body.errors[0].types[0].should.be.equal('any.empty');
+          res.body.errors[1].field[0].should.be.equal('description');
+          res.body.errors[1].types[0].should.be.equal('any.empty');
+          res.body.errors[2].field[0].should.be.equal('parent');
+          res.body.errors[2].types[0].should.be.equal('string.regex.base');
+
           done();
         });
     });

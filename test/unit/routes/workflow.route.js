@@ -243,8 +243,11 @@ describe('unit/routes/workflow.route', function() {
           done();
         });
     });
-    it.skip('should return 422', function(done) {
-      var data = {};
+    it('should return 422', function(done) {
+      var data = {
+        name: '',
+        type: ''
+      };
       workflowServiceStub.getWorkflow = function(user, id, done) {
         return done(null, {});
       };
@@ -257,6 +260,10 @@ describe('unit/routes/workflow.route', function() {
         .end(function(err, res) {
           if (err) throw err;
           res.status.should.be.equal(422);
+          res.body.errors[0].field[0].should.be.equal('name');
+          res.body.errors[0].types[0].should.be.equal('any.empty');
+          res.body.errors[1].field[0].should.be.equal('type');
+          res.body.errors[1].types[0].should.be.equal('any.empty');
           done();
         });
     });
