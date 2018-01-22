@@ -1,7 +1,5 @@
 var dir = '../../';
 
-var should = require('should');
-var assert = require('assert');
 var proxyquire = require('proxyquire');
 var supertest = require('supertest');
 var randexp = require('randexp');
@@ -9,16 +7,10 @@ var randexp = require('randexp');
 var express = require('express');
 var compression = require('compression');
 var bodyParser = require('body-parser');
-var mongoose = require('mongoose');
 var validation = require('express-validation');
 
 var config = require(dir + '../config');
-var expressAuth = require('express-auth')(config);
-var Workflow = require(dir + '../models/workflow.model').model;
 var type = require(dir + '../models/workflow-type.enum');
-var clearDB = require('mocha-mongoose')(config.db.uri, {
-  noClear: true
-});
 
 describe('unit/routes/workflow.route', function() {
 

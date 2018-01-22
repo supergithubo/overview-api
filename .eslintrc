@@ -2,9 +2,10 @@ extends: [
   'eslint:recommended'
 ]
 rules:
-  angular/file-name: 0
-  angular/function-type: 0
-  no-unused-vars: 0
+  no-unused-vars: [
+      "error",
+      { "vars": "all", "args": "none" }
+  ]
   no-console: 0
   indent: [
       "error",

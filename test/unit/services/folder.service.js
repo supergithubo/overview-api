@@ -4,8 +4,6 @@ var should = require('should');
 var proxyquire = require('proxyquire');
 var randexp = require('randexp');
 
-var Folder = require(dir + '../models/folder.model').model;
-
 describe('unit/services/folder.service', function() {
 
   var FolderStub;

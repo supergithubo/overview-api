@@ -4,8 +4,6 @@ var should = require('should');
 var proxyquire = require('proxyquire');
 var randexp = require('randexp');
 
-var Priority = require(dir + '../models/priority.model').model;
-
 describe('unit/services/priority.service', function() {
 
   var PriorityStub;

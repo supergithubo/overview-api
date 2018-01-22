@@ -1,15 +1,11 @@
 var dir = '../../';
 
 var should = require('should');
-var proxyquire = require('proxyquire');
-var randexp = require('randexp');
 var mongoose = require('mongoose');
-var async = require('async');
 
 var User = require('express-auth')().user.model;
 var Priority = require(dir + '../models/priority.model').model;
 
-var userRoles = require('express-auth')().roles;
 var config = require(dir + '../config');
 var clearDB = require('mocha-mongoose')(config.db.uri, {
   noClear: true

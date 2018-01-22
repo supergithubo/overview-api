@@ -1,8 +1,6 @@
 var dir = '../../';
 
 var should = require('should');
-var proxyquire = require('proxyquire');
-var randexp = require('randexp');
 var mongoose = require('mongoose');
 var async = require('async');
 
@@ -12,9 +10,7 @@ var Folder = require(dir + '../models/folder.model').model;
 var Priority = require(dir + '../models/priority.model').model;
 var Workflow = require(dir + '../models/workflow.model').model;
 
-var folderStatus = require(dir + '../models/folder-status.enum');
 var workflowType = require(dir + '../models/workflow-type.enum');
-var userRoles = require('express-auth')().roles;
 var config = require(dir + '../config');
 
 var clearDB = require('mocha-mongoose')(config.db.uri, {

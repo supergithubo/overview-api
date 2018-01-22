@@ -4,8 +4,6 @@ var should = require('should');
 var proxyquire = require('proxyquire');
 var randexp = require('randexp');
 
-var Task = require(dir + '../models/task.model').model;
-
 describe('unit/services/task.service', function() {
 
   var TaskStub;

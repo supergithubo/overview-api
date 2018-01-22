@@ -4,8 +4,6 @@ var should = require('should');
 var proxyquire = require('proxyquire');
 var randexp = require('randexp');
 
-var Workflow = require(dir + '../models/workflow.model').model;
-
 describe('unit/services/workflow.service', function() {
 
   var WorkflowStub;
