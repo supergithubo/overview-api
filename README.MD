@@ -5,6 +5,7 @@ Personal Project Management API
 
 Project Management API tailored for my freelancing gigs. Inspired by Trello, Asana, Dapulse & Wrike.
 
+
 [![Codeship](https://img.shields.io/codeship/ab748e30-81b5-0135-4477-4ec5e3c9a2b0/dev.svg?style=flat-square)](https://app.codeship.com/projects/246980)
 [![Codecov](https://img.shields.io/codecov/c/github/supergithubo/overview-api/dev.svg?style=flat-square)](https://codecov.io/gh/supergithubo/overview-api)
 [![Codacy grade](https://img.shields.io/codacy/grade/24746844097445aa806f4bb9c2364f87/dev.svg?style=flat-square)](https://www.codacy.com/app/winston.los.santos/overview-api/dashboard)
