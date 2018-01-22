@@ -11,7 +11,7 @@ Project Management API tailored for my freelancing gigs. Inspired by Trello, Asa
 
 ## REQUIREMENTS
 
-- [Node v6.11.x](https://nodejs.org/en/blog/release/v6.11.0/) (LTS: Boron)
+- [Node v8.4.x](https://nodejs.org/en/blog/release/v8.9.4/) (LTS: Carbon)
 - [MongoDB v3.4.x](https://docs.mongodb.com/manual/release-notes/3.4/)
 
 ## INSTALLATION
